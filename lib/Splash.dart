@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:upskill_app/Pages/login_page.dart';
-
 import 'onboarding_screen.dart';
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -18,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 10), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) =>  OnboardingScreen()),
+        MaterialPageRoute(builder: (context) => OnboardingScreen()),
       );
     });
   }
@@ -26,16 +24,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, // Set background color
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            CircularProgressIndicator(),
-            SizedBox(height: 20),
-            Text("Loading..."),
-          ],
+        child: Image.asset(
+          "assets/logo1.png", // Ensure the image is placed in assets folder
+          width: 200, // Adjust size as needed
+          height: 200,
+          fit: BoxFit.contain,
         ),
       ),
     );
   }
 }
+

@@ -6,7 +6,7 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
+      body: ListView(
         controller: _pageController,
         children: [
           _buildOnboardingPage(
@@ -77,23 +77,28 @@ class OnboardingScreen extends StatelessWidget {
 
           // Updated Button with Yellow/Golden Color
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFFFC107), // Yellow/Golden color
-              padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            onPressed: isLast
-                ? () {
-                    Navigator.pushReplacementNamed(context, '/login');
-                  }
-                : null,
-            child: Text(
-              isLast ? "Get Started" : "Get Started",
-              style: TextStyle(color: Colors.black), // Text color for contrast
-            ),
-          ),
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Color(0xFFFFC107), // Yellow/Golden color
+    padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+  ),
+  onPressed: () {
+    if (isLast) {
+      Navigator.pushReplacementNamed(context, '/login');
+    } else {
+      _pageController.nextPage(
+        duration: Duration(milliseconds: 500),
+        curve: Curves.ease,
+      );
+    }
+  },
+  child: Text(
+    isLast ? "Get Started" : "Next",
+    style: TextStyle(color: Colors.black), // Text color for contrast
+  ),
+),
 
           // Sign In
           SizedBox(height: 15),

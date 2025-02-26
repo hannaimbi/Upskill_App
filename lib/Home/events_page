@@ -1,0 +1,49 @@
+import 'package:flutter/material.dart';
+
+class EventsPage extends StatelessWidget {
+  final List<Map<String, String>> events = [
+    {"title": "Tech Talk", "date": "March 5", "image": "assets/event1.jpg"},
+    {"title": "Coding Challenge", "date": "March 10", "image": "assets/event2.jpg"},
+    {"title": "Hackathon", "date": "March 15", "image": "assets/event3.jpg"},
+    {"title": "AI Workshop", "date": "March 20", "image": "assets/event4.jpg"},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Upcoming Events")),
+      body: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: GridView.builder(
+          itemCount: events.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.8,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+          ),
+          itemBuilder: (context, index) {
+            return _buildEventCard(events[index]);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEventCard(Map<String, String> event) {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(event["image"]!, height: 80, fit: BoxFit.cover),
+          SizedBox(height: 10),
+          Text(event["title"]!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          SizedBox(height: 5),
+          Text(event["date"]!, style: TextStyle(color: Colors.grey)),
+        ],
+      ),
+    );
+  }
+}

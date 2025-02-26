@@ -70,7 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   return null;
                 },
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 7),
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,

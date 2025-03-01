@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:upskill_app/Home/homepage.dart';
-import 'package:upskill_app/Pages/register_page.dart';
+import 'package:upskill_app/Home/profile_page.dart';
+
 import 'package:upskill_app/auth/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,25 +19,48 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  // Track loading state
+  bool _isLoading = false;
+
   // Login function
   void login() async {
+    setState(() => _isLoading = true);
+
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      _showError("Please enter both email and password.");
+      setState(() => _isLoading = false);
+      return;
+    }
 
     _signIn(email, password);
   }
 
   void _signIn(String email, String password) async {
     try {
-      await authService.signInWithEmailPassword(email, password);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+      final user = await authService.signInWithEmailPassword(email, password);
+
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
+      } else {
+        _showError("Invalid credentials. Please try again.");
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Error: $e")));
+      _showError("Login failed: ${e.toString()}");
+    } finally {
+      setState(() => _isLoading = false);
     }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
   }
 
   @override
@@ -66,23 +90,31 @@ class _LoginPageState extends State<LoginPage> {
               decoration: const InputDecoration(labelText: 'Password'),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: login,
-              child: const Text('Login'),
-            ),
+            _isLoading
+                ? const CircularProgressIndicator()
+                :ElevatedButton(
+  onPressed: () {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()),
+    );
+  },
+  child: const Text('Login'),
+),
             const SizedBox(height: 10),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegisterPage()),
-                );
-              },
-              child: const Text(
-                "Don't have an account? Sign Up",
-                style: TextStyle(color: Color.fromARGB(255, 81, 94, 104)),
-              ),
-            ),
+           GestureDetector(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()),
+    ); // ✅ Corrected closing parenthesis
+  },
+  child: const Text(
+    "Don't have an account? Sign Up",
+    style: TextStyle(color: Color.fromARGB(255, 81, 94, 104)),
+  ),
+),
+
           ],
         ),
       ),

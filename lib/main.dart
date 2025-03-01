@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upskill_app/Home/homepage.dart';
 
 import 'package:upskill_app/Pages/login_page.dart';
+import 'package:upskill_app/auth/auth_gate.dart';
 import 'package:upskill_app/onboarding_screen.dart';
 
 import 'package:upskill_app/Splash.dart'; // Ensure the path is correct
@@ -34,6 +35,7 @@ class UpskillApp extends StatelessWidget {
   '/onboarding':(context) =>  OnboardingScreen(),
   '/login': (context) => const LoginPage(),
   '/home': (context) => HomePage(),
+  '/auth': (context) => AuthGate(),
 },
  debugShowCheckedModeBanner: false,
       home: SplashScreen(), 

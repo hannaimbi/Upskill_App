@@ -86,7 +86,7 @@ class OnboardingScreen extends StatelessWidget {
   ),
   onPressed: () {
     if (isLast) {
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushReplacementNamed(context, '/auth');
     } else {
       _pageController.nextPage(
         duration: Duration(milliseconds: 500),
@@ -104,7 +104,7 @@ class OnboardingScreen extends StatelessWidget {
           SizedBox(height: 15),
           TextButton(
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/login');
+              Navigator.pushReplacementNamed(context, '/auth');
             },
             child: Text(
               "Sign in",

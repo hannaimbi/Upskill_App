@@ -1,103 +1,91 @@
 import 'package:flutter/material.dart';
-import 'package:upskill_app/auth/auth_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
-
+class SignUpScreen extends StatefulWidget {
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
-  final authService = AuthService();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
-  // Sign Up function
-  void signUp() async {
+  Future<void> _signUp() async {
     if (!_formKey.currentState!.validate()) return;
-
     setState(() => _isLoading = true);
-
     try {
-      await authService.signUpWithEmailPassword(
-        _emailController.text.trim(),
-        _passwordController.text.trim(),
+      await Supabase.instance.client.auth.signUp(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
       );
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Sign-up successful!")),
-        );
-        // Navigate to login or home page (adjust as needed)
-        Navigator.pop(context);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: $e")),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sign-up successful! Please check your email.')),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${error.toString()}')),
+      );
     }
+    setState(() => _isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign Up')),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  if (!RegExp(r'^[\w-]+@([\w-]+\.)+[\w-]{2,4}$')
-                      .hasMatch(value)) {
-                    return 'Enter a valid email';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 7),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: 'Password'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a password';
-                  }
-                  if (value.length < 6) {
-                    return 'Password must be at least 6 characters';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              _isLoading
-                  ? const CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: signUp,
-                      child: const Text('Sign Up'),
+        padding: EdgeInsets.all(16.0),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Create Account',
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 8),
+                  Text('Start your learning journey',
+                      style: TextStyle(fontSize: 16, color: Colors.grey)),
+                  SizedBox(height: 24),
+                  TextFormField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      prefixIcon: Icon(Icons.email),
+                      border: OutlineInputBorder(),
                     ),
-              const SizedBox(height: 10),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("Already have an account? Log in"),
+                    validator: (value) =>
+                        value!.isEmpty ? 'Enter a valid email' : null,
+                  ),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      prefixIcon: Icon(Icons.lock),
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) =>
+                        value!.length < 6 ? 'Password too short' : null,
+                  ),
+                  SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _signUp,
+                      child: _isLoading
+                          ? CircularProgressIndicator(color: Colors.white)
+                          : Text('Sign Up'),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

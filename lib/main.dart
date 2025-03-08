@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:upskill_app/Home/homepage.dart';
+
+import 'package:upskill_app/Onboarding/onboarding_screen.dart';
 
 import 'package:upskill_app/Pages/login_page.dart';
 import 'package:upskill_app/auth/auth_gate.dart';
-import 'package:upskill_app/onboarding_screen.dart';
 
-import 'package:upskill_app/Splash.dart'; // Ensure the path is correct
+
+import 'package:upskill_app/Splash.dart';
+import 'package:upskill_app/home.dart'; // Ensure the path is correct
 
 
 
@@ -34,7 +36,7 @@ class UpskillApp extends StatelessWidget {
      routes: {
   '/onboarding':(context) =>  OnboardingScreen(),
   '/login': (context) => const LoginPage(),
-  '/home': (context) => HomePage(),
+  '/home': (context) => HomeScreen(),
   '/auth': (context) => AuthGate(),
 },
  debugShowCheckedModeBanner: false,

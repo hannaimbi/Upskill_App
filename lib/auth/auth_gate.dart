@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:upskill_app/Home/homepage.dart';
+import 'package:upskill_app/home.dart';
 
 import '../Pages/login_page.dart';
 import '../Pages/profile_page.dart';
@@ -24,7 +24,7 @@ class AuthGate extends StatelessWidget {
         // Check if there is a valid session
         final session = snapshot.hasData ? snapshot.data!.session: null;
         if (session != null) {
-          return  HomePage();
+          return  HomeScreen();
         } else {
           return const LoginPage();
         }

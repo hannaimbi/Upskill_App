@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:upskill_app/Pages/login_page.dart';
-import 'onboarding_screen.dart';
+import 'package:upskill_app/Onboarding/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -13,11 +12,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 5), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => OnboardingScreen()),
-      );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(seconds: 5), () {
+        if (mounted) {  // Ensure widget is still in the tree before navigating
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => OnboardingScreen()),
+          );
+        }
+      });
     });
   }
 
@@ -28,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: Image.asset(
           "assets/logo1.png", // Ensure the image is placed in assets folder
-          width: 200, // Adjust size as needed
+          width: 200,
           height: 200,
           fit: BoxFit.contain,
         ),
@@ -36,4 +38,3 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-

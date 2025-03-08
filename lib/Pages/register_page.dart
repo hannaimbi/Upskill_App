@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:upskill_app/Home/homepage.dart';
+
+import 'package:upskill_app/home.dart';
 
 import '../auth/auth_service.dart';
 
@@ -40,7 +41,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if (mounted) {
  Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => HomeScreen()),
         );      }
     } catch (e) {
       if (mounted) {

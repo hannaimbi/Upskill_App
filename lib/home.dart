@@ -1,50 +1,87 @@
 import 'package:flutter/material.dart';
-import 'package:upskill_app/other_screens/add.dart';
-import 'package:upskill_app/other_screens/alumini.dart';
-import 'package:upskill_app/other_screens/profile.dart';
-import 'package:upskill_app/other_screens/whishlist.dart';
-import 'Categories/analytics.dart';
-import 'Categories/coding.dart';
-import 'Categories/designing.dart';
-import 'Categories/marketing.dart';
-import 'other_screens/leaderboard.dart';
+import 'package:upskill_app/Categories/coding.dart';
+import 'package:upskill_app/other_screens/leaderboard.dart';
+import 'package:upskill_app/Categories/analytics.dart';
+import 'package:upskill_app/Categories/designing.dart';
+import 'package:upskill_app/Categories/marketing.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  final String userName;
+
+  HomeScreen({required this.userName});
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  final List<Widget> _screens = [
+    HomeContent(),
+    AlumniScreen(),
+    AddScreen(),
+    WishlistScreen(),
+    ProfileScreen(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Welcome, Hanna'),
+        title: Text('Welcome'),
         actions: [IconButton(icon: Icon(Icons.notifications), onPressed: () {})],
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Welcome Section
-            _buildWelcomeSection(),
-            SizedBox(height: 20),
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        selectedItemColor: Colors.purple,
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: true,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Alumni'),
+          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Add'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Wishlist'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
+      ),
+    );
+  }
+}
 
-            // Top Categories
-            Text('Top Categories', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            _buildCategoryRow(context),
-            SizedBox(height: 20),
-
-            // Popular Courses
-            Text('Popular Courses', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            _buildCourseList(),
-            SizedBox(height: 20),
-
-            // Leaderboard Section
-            Text('Leaderboard', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            GestureDetector(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => LeaderboardScreen())),
-              child: _buildLeaderboardCard(),
-            ),
-            SizedBox(height: 20),
-          ],
-        ),
+// Screens for Bottom Navigation
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildWelcomeSection(),
+          SizedBox(height: 20),
+          Text('Top Categories', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          _buildCategoryRow(context),
+          SizedBox(height: 20),
+          Text('Popular Courses', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          _buildCourseList(),
+          SizedBox(height: 20),
+          Text('Leaderboard', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          GestureDetector(
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => LeaderboardScreen())),
+            child: _buildLeaderboardCard(),
+          ),
+        ],
       ),
     );
   }
@@ -63,7 +100,7 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Start your learning journey now!', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                Text('Start your learning journey now!', style: TextStyle(fontSize: 16)),
                 SizedBox(height: 8),
                 ElevatedButton(onPressed: () {}, child: Text('Get Started')),
               ],
@@ -84,7 +121,7 @@ class HomeScreen extends StatelessWidget {
       'assets/images/analytics.png'
     ];
     List<Widget> screens = [
-      CodingScreen(),
+      CoursesPage(),
       DesigningScreen(),
       MarketingScreen(),
       AnalyticsScreen(),
@@ -158,4 +195,24 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+class AlumniScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Center(child: Text('Alumni Screen'));
+}
+
+class AddScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Center(child: Text('Add Screen'));
+}
+
+class WishlistScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Center(child: Text('Wishlist Screen'));
+}
+
+class ProfileScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Center(child: Text('Profile Screen'));
 }

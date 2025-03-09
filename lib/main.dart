@@ -9,7 +9,8 @@ import 'package:upskill_app/auth/auth_gate.dart';
 
 
 import 'package:upskill_app/Splash.dart';
-import 'package:upskill_app/home.dart'; // Ensure the path is correct
+import 'package:upskill_app/home.dart';
+
 
 
 
@@ -36,7 +37,7 @@ class UpskillApp extends StatelessWidget {
      routes: {
   '/onboarding':(context) =>  OnboardingScreen(),
   '/login': (context) => const LoginPage(),
-  '/home': (context) => HomeScreen(),
+  '/home': (context) => HomeScreen(userName: 'user.name',),
   '/auth': (context) => AuthGate(),
 },
  debugShowCheckedModeBanner: false,

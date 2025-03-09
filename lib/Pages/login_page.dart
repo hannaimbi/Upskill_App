@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:upskill_app/auth/auth_service.dart';
 import 'package:upskill_app/home.dart';
-import 'package:upskill_app/other_screens/profile.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
   onPressed: () {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => HomeScreen()),
+      MaterialPageRoute(builder: (context) => HomeScreen(userName: 'user',)),
     );
   },
   child: const Text('Login'),
@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
   onTap: () {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomeScreen()),
+      MaterialPageRoute(builder: (context) => HomeScreen(userName: '',)),
     ); // ✅ Corrected closing parenthesis
   },
   child: const Text(

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'package:gotrue/src/types/auth_response.dart';
 import 'package:upskill_app/home.dart';
-
 import '../auth/auth_service.dart';
-
+import '../services/database_service.dart'; // Import the database service
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -15,11 +14,15 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   // Get auth service
   final authService = AuthService();
+  final dbService = DatabaseService(); // Initialize database service
 
   // Text field controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
+  // Track loading state
+  bool _isLoading = false;
 
   // Sign-up function
   void _signUp() async {
@@ -27,29 +30,52 @@ class _RegisterPageState extends State<RegisterPage> {
     final password = _passwordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
 
-    // Check if passwords match
-    if (password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match')),
-      );
+    if (email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      _showError("All fields are required.");
       return;
     }
 
-    // Attempt sign-up
-    try {
-      await authService.signUpWithEmailPassword(email, password);
-      if (mounted) {
- Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-        );      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: $e")),
-        );
-      }
+    // Check if passwords match
+    if (password != confirmPassword) {
+      _showError("Passwords do not match.");
+      return;
     }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final user = await authService.signUpWithEmailPassword(email, password);
+      
+      if (user != null) {
+        // Add user to database
+        await dbService.addStudent(email, "student");
+
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen(userName: user.name ?? "User")),
+          );
+        }
+      }
+    } catch (e) {
+      _showError("Sign-up failed: ${e.toString()}");
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: const Color.fromARGB(255, 73, 54, 244)),
+    );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -78,13 +104,19 @@ class _RegisterPageState extends State<RegisterPage> {
               decoration: const InputDecoration(labelText: 'Confirm Password'),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _signUp,
-              child: const Text('Sign Up'),
-            ),
+            _isLoading
+                ? const CircularProgressIndicator()
+                : ElevatedButton(
+                    onPressed: _signUp,
+                    child: const Text('Sign Up'),
+                  ),
           ],
         ),
       ),
     );
   }
+}
+
+extension on AuthResponse {
+  get name => null;
 }

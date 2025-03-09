@@ -3,17 +3,21 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class DatabaseService {
   final supabase = Supabase.instance.client;
 
-  Future<List<Map<String, dynamic>>> fetchUserData() async {
-    final userId = supabase.auth.currentUser?.id;
+  Future<void> addStudent(String email, String role) async {
+    final userId = supabase.auth.currentUser?.id; // Get the logged-in user's ID
+
     if (userId == null) {
-      throw Exception('User not authenticated');
+      print("User not logged in");
+      return;
     }
 
-    final response = await supabase
-        .from('Students')
-        .select()
-        .eq('user_id', userId);
+    final response = await supabase.from('students').insert({
+      'user_id': userId,
+      'email': email,
+      'role': role,
+      'created_at': DateTime.now().toIso8601String(),
+    });
 
-    return response;
+    print("Student added: $response");
   }
 }

@@ -14,7 +14,6 @@ class AuthGate extends StatelessWidget {
     final response = await Supabase.instance.client
         .from('profiles') // Make sure 'profiles' table contains user names
         .select('name')
-        .eq('id', userId)
         .single();
 
     return response['name'] as String?;
@@ -50,7 +49,7 @@ class AuthGate extends StatelessWidget {
               }
 
               final userName = userSnapshot.data ?? 'User';
-              return HomeScreen(userName: userName);
+              return HomeScreen();
             },
           );
         } else {

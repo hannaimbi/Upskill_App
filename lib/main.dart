@@ -37,7 +37,7 @@ class UpskillApp extends StatelessWidget {
      routes: {
   '/onboarding':(context) =>  OnboardingScreen(),
   '/login': (context) => const LoginPage(),
-  '/home': (context) => HomeScreen(userName: 'user.name',),
+  '/home': (context) => HomeScreen(),
   '/auth': (context) => AuthGate(),
 },
  debugShowCheckedModeBanner: false,

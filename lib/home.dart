@@ -6,9 +6,8 @@ import 'package:upskill_app/Categories/designing.dart';
 import 'package:upskill_app/Categories/marketing.dart';
 
 class HomeScreen extends StatefulWidget {
-  final String userName;
 
-  HomeScreen({required this.userName});
+
 
   @override
   _HomeScreenState createState() => _HomeScreenState();

@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
   onPressed: () {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => HomeScreen(userName: 'user',)),
+      MaterialPageRoute(builder: (context) => HomeScreen())
     );
   },
   child: const Text('Login'),
@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
   onTap: () {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomeScreen(userName: '',)),
+      MaterialPageRoute(builder: (context) => HomeScreen()),
     ); // ✅ Corrected closing parenthesis
   },
   child: const Text(
